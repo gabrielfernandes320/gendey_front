@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "key": "@base-bg",
+      "value": "rgba(27, 38, 44, 1)"
+    },
+    {
+      "key": "@base-border-radius",
+      "value": "4px"
+    },
+    {
+      "key": "@base-border-color",
+      "value": "rgba(63, 77, 84, 1)"
+    },
+    {
+      "key": "@base-focus-color",
+      "value": "rgba(0, 0, 0, 1)"
+    },
+    {
+      "key": "@base-accent",
+      "value": "rgba(50, 130, 184, 1)"
+    }
+  ],
+  "baseTheme": "material.lime.dark",
+  "assetsBasePath": "../../../node_modules/devextreme/dist/css/",
+  "outputColorScheme": "additional",
+  "makeSwatch": true,
+  "base": true,
+  "version": "20.1.6",
+  "widgets": ["treeview", "navbar"]
+}
