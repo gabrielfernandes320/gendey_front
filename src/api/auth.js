@@ -42,20 +42,24 @@ export async function getUser() {
   }
 }
 
-export async function createAccount(email, password) {
-  try {
-    // Send request
-    console.log(email, password);
-
-    return {
-      isOk: true,
-    };
-  } catch {
-    return {
-      isOk: false,
-      message: "Failed to create account",
-    };
-  }
+export async function createAccount(data) {
+  const authInfo = await authApi
+    .post("users", data)
+    .then((response) => {
+      console.log(response);
+      return {
+        isOk: true,
+      };
+    })
+    .catch((error) => {
+      logout();
+      return {
+        isOk: false,
+        message: "Error on account creating",
+      };
+    });
+  console.log(authInfo);
+  return authInfo;
 }
 
 export async function changePassword(email, recoveryCode) {

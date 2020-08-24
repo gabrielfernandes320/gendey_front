@@ -1,6 +1,9 @@
 @import "../../themes/generated/variables.base.scss";
 
 .create-account-form {
+  margin: auto auto;
+  padding: 40px;
+  flex-grow: 0;
   .policy-info {
     margin: 10px 0;
     color: rgba($base-text-color, alpha($base-text-color) * 0.7);
@@ -10,6 +13,14 @@
     a {
       color: rgba($base-text-color, alpha($base-text-color) * 0.7);
     }
+  }
+
+  .title {
+    margin-bottom: 30px;
+    color: $base-text-color;
+    line-height: 28px;
+    font-weight: 500;
+    font-size: 24px;
   }
 
   .login-link {
