@@ -9,6 +9,7 @@ import Form, {
   CustomRule,
   EmailRule,
   GroupItem,
+  EmptyItem,
 } from "devextreme-react/form";
 import notify from "devextreme/ui/notify";
 import LoadIndicator from "devextreme-react/load-indicator";
@@ -28,6 +29,14 @@ export default function (props) {
 
       data.roleId = 1;
       data.active = true;
+      data.FkAdressNavigation = {
+        fkCity: data.fkCity,
+        nbhood: data.nbhood,
+        street: data.street,
+        num: data.num,
+        complement: data.complement,
+        postalcode: data.postalcode,
+      };
       data.FkContactNavigation = {
         name: data.name,
         fone: data.fone,
@@ -70,8 +79,8 @@ export default function (props) {
             editorType={"dxTextBox"}
             editorOptions={nameEditorOptions}
           >
-            <RequiredRule message="Email is required" />
-            <EmailRule message="Email is invalid" />
+            <RequiredRule message="Name is required" />
+
             <Label visible={false} />
           </Item>
           <Item
@@ -154,11 +163,74 @@ export default function (props) {
             <Label visible={false} />
           </Item>
         </GroupItem>
+        <GroupItem caption="Address Information" colCount={1}>
+          <Item
+            dataField={"fkCity"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "City ID",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+          <Item
+            dataField={"nbhood"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "Neighborhood",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+          <Item
+            dataField={"street"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "Street",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+          <Item
+            dataField={"num"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "House number",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+          <Item
+            dataField={"complement"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "Complement",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+          <Item
+            dataField={"postalcode"}
+            editorType={"dxTextBox"}
+            editorOptions={{
+              stylingMode: "filled",
+              placeholder: "Postal Code",
+            }}
+          >
+            <Label visible={false} />
+          </Item>
+        </GroupItem>
         {/* <Item>
           <div className='policy-info'>
             By creating an account, you agree to the <Link to="#">Terms of Service</Link> and <Link to="#">Privacy Policy</Link>
           </div>
         </Item> */}
+        <EmptyItem />
         <ButtonItem>
           <ButtonOptions
             width={"100%"}
@@ -174,6 +246,8 @@ export default function (props) {
             </span>
           </ButtonOptions>
         </ButtonItem>
+        <EmptyItem />
+        <EmptyItem />
         <Item>
           <div className={"login-link"}>
             Have an account? <Link to={"/login"}>Sign In</Link>
