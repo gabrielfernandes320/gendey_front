@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Form, {
   Item,
@@ -16,11 +16,13 @@ import LoadIndicator from "devextreme-react/load-indicator";
 import { createAccount } from "../../api/auth";
 import "./create-account-form.scss";
 import { Group } from "devextreme-react/diagram";
+import { api } from "../../api/api";
 
 export default function (props) {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const formData = useRef({});
+  const [cities, setCities] = useState([]);
 
   const onSubmit = useCallback(
     async (e) => {
@@ -57,6 +59,21 @@ export default function (props) {
     },
     [history]
   );
+
+  useEffect(() => {
+    async function loadData() {
+      await api
+        .get("/city")
+        .then((response) => {
+          setCities(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          setCities(error.response);
+        });
+    }
+    loadData();
+  }, []);
 
   const confirmPassword = useCallback(
     ({ value }) => value === formData.current.password,
@@ -166,10 +183,13 @@ export default function (props) {
         <GroupItem caption="Address Information" colCount={1}>
           <Item
             dataField={"fkCity"}
-            editorType={"dxTextBox"}
+            editorType={"dxSelectBox"}
             editorOptions={{
+              dataSource: cities,
+              placeholder: "Select your city",
               stylingMode: "filled",
-              placeholder: "City ID",
+              valueExpr: "Id",
+              displayExpr: "Name",
             }}
           >
             <Label visible={false} />
