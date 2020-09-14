@@ -1,24 +1,26 @@
-import { withNavigationWatcher } from './contexts/navigation';
-import { HomePage, TasksPage, ProfilePage } from './pages';
+import { withNavigationWatcher } from "./contexts/navigation";
+import { HomePage, TasksPage, ProfilePage } from "./pages";
 
 const routes = [
   {
-    path: '/tasks',
-    component: TasksPage
+    path: "/tasks",
+    component: TasksPage,
+    roles: ["Admin"],
   },
   {
-    path: '/profile',
-    component: ProfilePage
+    path: "/profile",
+    component: ProfilePage,
+    roles: ["Client"],
   },
   {
-    path: '/home',
-    component: HomePage
-  }
+    path: "/home",
+    component: HomePage,
+  },
 ];
 
-export default routes.map(route => {
+export default routes.map((route) => {
   return {
     ...route,
-    component: withNavigationWatcher(route.component)
+    component: withNavigationWatcher(route.component),
   };
 });

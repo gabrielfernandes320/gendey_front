@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import defaultUser from "../utils/default-user";
 import { authApi } from "./api";
 const TOKEN_KEY = "@gendey/authToken";
@@ -13,7 +14,7 @@ export async function signIn(email, password) {
       login(response.data);
       return {
         isOk: true,
-        data: defaultUser,
+        data: response.data.user,
       };
     })
     .catch((error) => {
@@ -23,7 +24,7 @@ export async function signIn(email, password) {
         message: "Erro ao efetuar login",
       };
     });
-  console.log(authInfo);
+  
   return authInfo;
 }
 
@@ -42,6 +43,18 @@ export async function getUser() {
   }
 }
 
+export async function validateToken(token) {
+  await authApi
+    .get("auth/validatetoken", {
+      params: {
+        token: token,
+      },
+    })
+    .then((response) => {
+      return response.data.isValid;
+    });
+}
+
 export async function createAccount(data) {
   const authInfo = await authApi
     .post("users", data)
@@ -58,7 +71,7 @@ export async function createAccount(data) {
         message: "Error on account creating",
       };
     });
-  console.log(authInfo);
+  
   return authInfo;
 }
 
@@ -93,6 +106,10 @@ export async function resetPassword(email) {
     };
   }
 }
+
+export const isAuthenticated = () => {
+  return localStorage.getItem(TOKEN_KEY) !== null;
+};
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const getRefreshTokenCode = () =>

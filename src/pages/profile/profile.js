@@ -15,7 +15,6 @@ export default () => {
         .get(`/users/3`)
         .then((response) => {
           setUser(response.data);
-          console.log(response.data);
         })
         .catch((error) => {});
     }

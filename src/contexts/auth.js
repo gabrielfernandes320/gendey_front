@@ -5,11 +5,13 @@ import React, {
   useContext,
   useCallback,
 } from "react";
+import { authApi } from "../api/api";
 import { getUser, signIn as sendSignInRequest, logout } from "../api/auth";
 
 function AuthProvider(props) {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [valid, setValid] = useState(true);
 
   useEffect(() => {
     (async function () {
@@ -22,9 +24,22 @@ function AuthProvider(props) {
     })();
   }, []);
 
+  async function validateToken(token) {
+    await authApi
+      .get("auth/validatetoken", {
+        params: {
+          token: token,
+        },
+      })
+      .then((response) => {
+        setValid(response.data.isValid);
+      });
+  }
+
   const signIn = useCallback(async (email, password) => {
     const result = await sendSignInRequest(email, password);
     if (result.isOk) {
+      
       setUser(result.data);
     }
 
@@ -38,7 +53,7 @@ function AuthProvider(props) {
 
   return (
     <AuthContext.Provider
-      value={{ user, signIn, signOut, loading }}
+      value={{ user, signIn, signOut, loading, setValid, valid, validateToken }}
       {...props}
     />
   );

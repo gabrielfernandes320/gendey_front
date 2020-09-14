@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
-import TreeView from 'devextreme-react/tree-view';
-import { navigation } from '../../app-navigation';
-import { useNavigation } from '../../contexts/navigation';
-import { useScreenSize } from '../../utils/media-query';
-import './side-navigation-menu.scss';
+import React, { useEffect, useRef, useCallback, useMemo } from "react";
+import TreeView from "devextreme-react/tree-view";
+import { navigation } from "../../app-navigation";
+import routes from "../../app-routes";
 
-import * as events from 'devextreme/events';
+import { useNavigation } from "../../contexts/navigation";
+import { useScreenSize } from "../../utils/media-query";
+import "./side-navigation-menu.scss";
+
+import * as events from "devextreme/events";
+import { useAuth } from "../../contexts/auth";
 
 export default function (props) {
   const {
@@ -13,17 +16,27 @@ export default function (props) {
     selectedItemChanged,
     openMenu,
     compactMode,
-    onMenuReady
+    onMenuReady,
   } = props;
+  const { user } = useAuth();
+  let nav = navigation;
+
+  nav.forEach((item) => {
+    routes.find((element) => element.path === item.path);
+    console.log("teste", routes.roles?.indexOf(user.Role.Name));
+    if (routes.roles && routes.roles.indexOf(user.Role?.Name) === -1) {
+      console.log("nao autorizado");
+    }
+  });
 
   const { isLarge } = useScreenSize();
-  function normalizePath () {    
-    return navigation.map((item) => {
-      if(item.path && !(/^\//.test(item.path))){ 
+  function normalizePath() {
+    return nav.map((item) => {
+      if (item.path && !/^\//.test(item.path)) {
         item.path = `/${item.path}`;
       }
-      return {...item, expanded: isLarge} 
-    })
+      return { ...item, expanded: isLarge };
+    });
   }
 
   const items = useMemo(
@@ -32,21 +45,26 @@ export default function (props) {
     []
   );
 
-  const { navigationData: { currentPath } } = useNavigation();
+  const {
+    navigationData: { currentPath },
+  } = useNavigation();
 
   const treeViewRef = useRef();
   const wrapperRef = useRef();
-  const getWrapperRef = useCallback((element) => {
-    const prevElement = wrapperRef.current;
-    if (prevElement) {
-      events.off(prevElement, 'dxclick');
-    }
+  const getWrapperRef = useCallback(
+    (element) => {
+      const prevElement = wrapperRef.current;
+      if (prevElement) {
+        events.off(prevElement, "dxclick");
+      }
 
-    wrapperRef.current = element;
-    events.on(element, 'dxclick', e => {
-      openMenu(e);
-    });
-  }, [openMenu]);
+      wrapperRef.current = element;
+      events.on(element, "dxclick", (e) => {
+        openMenu(e);
+      });
+    },
+    [openMenu]
+  );
 
   useEffect(() => {
     const treeView = treeViewRef.current && treeViewRef.current.instance;
@@ -66,21 +84,21 @@ export default function (props) {
 
   return (
     <div
-      className={'dx-swatch-additional side-navigation-menu'}
+      className={"dx-swatch-additional side-navigation-menu"}
       ref={getWrapperRef}
     >
       {children}
-      <div className={'menu-container'}>
+      <div className={"menu-container"}>
         <TreeView
           ref={treeViewRef}
           items={items}
-          keyExpr={'path'}
-          selectionMode={'single'}
+          keyExpr={"path"}
+          selectionMode={"single"}
           focusStateEnabled={false}
-          expandEvent={'click'}
+          expandEvent={"click"}
           onItemClick={selectedItemChanged}
           onContentReady={onMenuReady}
-          width={'100%'}
+          width={"100%"}
         />
       </div>
     </div>
